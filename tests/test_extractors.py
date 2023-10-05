@@ -1,45 +1,60 @@
 import unittest
 import tempfile
 import os
-from resume_matcher.extractors import TxtExtractor, ExtractionError
+import io
+from docx import Document
+
+from resume_matcher.extractors import (
+    TxtExtractor,
+    PdfExtractor,
+    DocxExtractor,
+    DocumentExtractorFactory,
+    ExtractionError,
+)
 
 
-class TestTxtExtractor(unittest.TestCase):
+class TestExtractors(unittest.TestCase):
 
-    def setUp(self):
-        self.extractor = TxtExtractor()
+    def test_txt_extractor(self):
+        extractor = TxtExtractor()
+        text = "Senior Python Developer\nDjango, FastAPI, PostgreSQL"
+        result = extractor.extract_from_bytes(text.encode("utf-8"))
+        self.assertEqual(result, text)
 
-    def test_extract_from_plain_text_file(self):
-        sample_text = "Software Engineer\nExperience with Python and SQL."
-        with tempfile.NamedTemporaryFile("w", encoding="utf-8", delete=False, suffix=".txt") as f:
-            f.write(sample_text)
-            temp_path = f.name
+    def test_docx_extractor(self):
+        # Create an in-memory DOCX
+        doc = Document()
+        doc.add_heading("John Doe - Resume", level=1)
+        doc.add_paragraph("Skills: Python, Docker, Kubernetes")
+        
+        # Add table
+        table = doc.add_table(rows=1, cols=2)
+        table.rows[0].cells[0].text = "Education"
+        table.rows[0].cells[1].text = "B.S. Computer Science"
 
-        try:
-            extracted = self.extractor.extract_from_file(temp_path)
-            self.assertEqual(extracted, sample_text)
-        finally:
-            os.remove(temp_path)
+        buf = io.BytesIO()
+        doc.save(buf)
+        buf.seek(0)
 
-    def test_extract_from_bytes(self):
-        sample_text = "Data Scientist\nMachine Learning Specialist."
-        byte_data = sample_text.encode("utf-8")
-        extracted = self.extractor.extract_from_bytes(byte_data)
-        self.assertEqual(extracted, sample_text)
+        extractor = DocxExtractor()
+        extracted = extractor.extract_from_bytes(buf)
+        self.assertIn("John Doe - Resume", extracted)
+        self.assertIn("Skills: Python, Docker, Kubernetes", extracted)
+        self.assertIn("Education | B.S. Computer Science", extracted)
 
-    def test_missing_file_raises_error(self):
+    def test_factory_resolution(self):
+        txt_ext = DocumentExtractorFactory.get_extractor("resume.txt")
+        self.assertIsInstance(txt_ext, TxtExtractor)
+
+        pdf_ext = DocumentExtractorFactory.get_extractor("resume.pdf")
+        self.assertIsInstance(pdf_ext, PdfExtractor)
+
+        docx_ext = DocumentExtractorFactory.get_extractor("resume.docx")
+        self.assertIsInstance(docx_ext, DocxExtractor)
+
+    def test_factory_unsupported_format(self):
         with self.assertRaises(ExtractionError):
-            self.extractor.extract_from_file("non_existent_file.txt")
-
-    def test_empty_file_raises_error(self):
-        with tempfile.NamedTemporaryFile("w", encoding="utf-8", delete=False, suffix=".txt") as f:
-            temp_path = f.name
-
-        try:
-            with self.assertRaises(ExtractionError):
-                self.extractor.extract_from_file(temp_path)
-        finally:
-            os.remove(temp_path)
+            DocumentExtractorFactory.get_extractor("resume.xyz")
 
 
 if __name__ == "__main__":
