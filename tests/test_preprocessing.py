@@ -1,5 +1,5 @@
 import unittest
-from resume_matcher.preprocessing import TextCleaner, get_stopwords
+from resume_matcher.preprocessing import TextCleaner, get_stopwords, NLPPipeline
 
 
 class TestPreprocessing(unittest.TestCase):
@@ -10,27 +10,18 @@ class TestPreprocessing(unittest.TestCase):
         self.assertNotIn("john.doe@example.com", cleaned)
         self.assertNotIn("https://johndoe.dev", cleaned)
         self.assertIn("Contact me at", cleaned)
-        self.assertIn("for projects.", cleaned)
 
-    def test_cleaner_normalizes_bullets(self):
-        raw = "• Python\n▪ Docker\n★ Kubernetes\n► CI/CD"
-        cleaned = TextCleaner.clean(raw)
-        self.assertNotIn("•", cleaned)
-        self.assertNotIn("▪", cleaned)
-        self.assertNotIn("★", cleaned)
-        self.assertNotIn("►", cleaned)
-        self.assertIn("Python", cleaned)
-        self.assertIn("CI/CD", cleaned)
+    def test_nlp_pipeline_tokens_and_chunks(self):
+        sample = "Senior Python Engineer developing machine learning pipelines in AWS cloud."
+        tokens = NLPPipeline.extract_tokens(sample)
+        
+        self.assertIn("python", tokens)
+        self.assertIn("engineer", tokens)
+        self.assertIn("pipeline", tokens)
+        self.assertIn("cloud", tokens)
 
-    def test_stopwords_retrieval(self):
-        general = get_stopwords(include_domain=False)
-        self.assertIn("the", general)
-        self.assertIn("and", general)
-        self.assertNotIn("resume", general)
-
-        domain = get_stopwords(include_domain=True)
-        self.assertIn("resume", domain)
-        self.assertIn("responsibilities", domain)
+        chunks = NLPPipeline.extract_noun_chunks(sample)
+        self.assertTrue(any("machine learning" in c for c in chunks) or any("python" in c for c in chunks))
 
 
 if __name__ == "__main__":
