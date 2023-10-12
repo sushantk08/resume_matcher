@@ -3,6 +3,7 @@ TF-IDF Vectorizer and similarity scoring using scikit-learn.
 """
 
 from typing import Dict, List, Tuple, Any
+import re
 import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
@@ -28,7 +29,14 @@ class TfidfMatcher:
             sublinear_tf: Apply sublinear scaling (1 + log(tf)) to dampen word frequency dominance.
             min_df: Minimum document frequency for terms.
         """
-        self.stopwords = list(get_stopwords(include_domain=True))
+        raw_stopwords = get_stopwords(include_domain=True)
+        # Strip contractions to keep stop words strictly alphanumeric for sklearn's internal tokenizer
+        clean_stopwords = set()
+        for w in raw_stopwords:
+            sub_tokens = re.findall(r"\b\w+\b", w.lower())
+            clean_stopwords.update(sub_tokens)
+
+        self.stopwords = sorted(list(clean_stopwords))
         self.vectorizer = TfidfVectorizer(
             ngram_range=ngram_range,
             sublinear_tf=sublinear_tf,
