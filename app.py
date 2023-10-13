@@ -1,13 +1,57 @@
-import streamlit as st
+"""
+Main Streamlit Application Entry Point.
+"""
 
+import streamlit as st
+from resume_matcher.engine import ResumeMatcher
+from resume_matcher.ui import render_sidebar_controls, render_single_match_view
+
+# Streamlit Page Config
 st.set_page_config(
-    page_title="Resume & Job Description Matcher",
+    page_title="Resume & JD Fit Matcher",
     page_icon="📄",
     layout="wide",
     initial_sidebar_state="expanded",
 )
 
-st.title("📄 Resume & Job Description Matcher")
-st.caption("AI-powered fit scoring, skill gap analysis, and resume tailoring engine.")
+# Custom Styling
+st.markdown(
+    """
+    <style>
+    .main-title { font-size: 2.2rem; font-weight: 700; color: #1E293B; margin-bottom: 0.2rem; }
+    .sub-title { font-size: 1.05rem; color: #64748B; margin-bottom: 1.5rem; }
+    .stTabs [data-baseweb="tab-list"] { gap: 10px; }
+    .stTabs [data-baseweb="tab"] { border-radius: 6px; padding: 8px 16px; }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
 
-st.info("System initialized. Document extraction and analysis modules will be integrated in subsequent steps.")
+st.markdown('<div class="main-title">📄 Resume & Job Description Matcher</div>', unsafe_allow_html=True)
+st.markdown(
+    '<div class="sub-title">Evaluate applicant-to-job fit using TF-IDF lexical overlap, sentence-transformers semantic embeddings, and technical skill taxonomy extraction.</div>',
+    unsafe_allow_html=True,
+)
+
+# Initialize Matcher in Streamlit cache
+@st.cache_resource(show_spinner="Initializing NLP & Embedding models...")
+def load_matcher():
+    return ResumeMatcher()
+
+matcher = load_matcher()
+
+# Sidebar Configuration
+sidebar_config = render_sidebar_controls()
+
+# Main Views Navigation
+tab1, tab2 = st.tabs(["🎯 Single Candidate Match", "👥 Batch Candidate Triage"])
+
+with tab1:
+    render_single_match_view(matcher, sidebar_config)
+
+    # Placeholder for results (to be filled in Step 12)
+    if st.session_state.get("has_analyzed", False):
+        st.success("Analysis complete! Result cards and charts will be rendered in Step 12.")
+
+with tab2:
+    st.info("Batch Candidate Triage mode will be activated in Step 14.")
