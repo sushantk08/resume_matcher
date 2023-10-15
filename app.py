@@ -33,7 +33,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# Initialize Matcher in Streamlit cache
+# Initialize Matcher
 @st.cache_resource(show_spinner="Initializing NLP & Embedding models...")
 def load_matcher():
     return ResumeMatcher()
@@ -43,15 +43,11 @@ matcher = load_matcher()
 # Sidebar Configuration
 sidebar_config = render_sidebar_controls()
 
-# Main Views Navigation
+# Main Navigation Tabs
 tab1, tab2 = st.tabs(["🎯 Single Candidate Match", "👥 Batch Candidate Triage"])
 
 with tab1:
     render_single_match_view(matcher, sidebar_config)
-
-    # Placeholder for results (to be filled in Step 12)
-    if st.session_state.get("has_analyzed", False):
-        st.success("Analysis complete! Result cards and charts will be rendered in Step 12.")
 
 with tab2:
     st.info("Batch Candidate Triage mode will be activated in Step 14.")
