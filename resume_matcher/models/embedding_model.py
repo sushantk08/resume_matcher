@@ -28,7 +28,7 @@ class EmbeddingMatcher:
     def get_model(cls, model_name: str = "all-MiniLM-L6-v2") -> SentenceTransformer:
         """Lazy load the sentence transformer model to optimize memory and startup."""
         if cls._model_instance is None:
-            cls._model_instance = SentenceTransformer(model_name)
+            cls._model_instance = SentenceTransformer(model_name, device="cpu")
         return cls._model_instance
 
     def encode(self, text_or_list) -> np.ndarray:

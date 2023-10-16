@@ -3,7 +3,6 @@ Main Streamlit Application Entry Point.
 """
 
 import streamlit as st
-from resume_matcher.engine import ResumeMatcher
 from resume_matcher.ui import render_sidebar_controls, render_single_match_view
 
 # Streamlit Page Config
@@ -33,13 +32,6 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# Initialize Matcher
-@st.cache_resource(show_spinner="Initializing NLP & Embedding models...")
-def load_matcher():
-    return ResumeMatcher()
-
-matcher = load_matcher()
-
 # Sidebar Configuration
 sidebar_config = render_sidebar_controls()
 
@@ -47,7 +39,7 @@ sidebar_config = render_sidebar_controls()
 tab1, tab2 = st.tabs(["🎯 Single Candidate Match", "👥 Batch Candidate Triage"])
 
 with tab1:
-    render_single_match_view(matcher, sidebar_config)
+    render_single_match_view(sidebar_config)
 
 with tab2:
     st.info("Batch Candidate Triage mode will be activated in Step 14.")

@@ -9,10 +9,16 @@ from resume_matcher.ui.components import (
     render_skill_badges,
     render_keyword_table,
 )
-from resume_matcher.engine import ResumeMatcher
 
 
-def render_single_match_view(matcher: ResumeMatcher, config: dict):
+@st.cache_resource(show_spinner=False)
+def get_cached_matcher():
+    """Load and cache the heavy ML models only once."""
+    from resume_matcher.engine import ResumeMatcher
+    return ResumeMatcher()
+
+
+def render_single_match_view(config: dict):
     """Render the primary single resume vs job description matching workflow."""
     col1, col2 = st.columns(2)
 
@@ -55,7 +61,8 @@ def render_single_match_view(matcher: ResumeMatcher, config: dict):
             st.error("Please provide a Job Description.")
             return
 
-        with st.spinner("Analyzing fit across TF-IDF, embeddings, and skill taxonomy..."):
+        with st.spinner("⚡ Loading NLP models and analyzing candidate fit (first run caches models)..."):
+            matcher = get_cached_matcher()
             results = matcher.match(
                 resume_input=resume_input,
                 jd_input=jd_input,
