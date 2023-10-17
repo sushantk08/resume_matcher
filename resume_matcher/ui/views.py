@@ -8,12 +8,13 @@ from resume_matcher.ui.components import (
     render_overall_score_card,
     render_skill_badges,
     render_keyword_table,
+    render_tailoring_tab,
 )
 
 
 @st.cache_resource(show_spinner=False)
 def get_cached_matcher():
-    """Load and cache the heavy ML models only once."""
+    """Load and cache the NLP models only once."""
     from resume_matcher.engine import ResumeMatcher
     return ResumeMatcher()
 
@@ -61,7 +62,7 @@ def render_single_match_view(config: dict):
             st.error("Please provide a Job Description.")
             return
 
-        with st.spinner("⚡ Loading NLP models and analyzing candidate fit (first run caches models)..."):
+        with st.spinner("⚡ Analyzing candidate fit across models..."):
             matcher = get_cached_matcher()
             results = matcher.match(
                 resume_input=resume_input,
@@ -72,10 +73,13 @@ def render_single_match_view(config: dict):
             )
             st.session_state["match_results"] = results
             st.session_state["has_analyzed"] = True
+            st.session_state["last_resume_input"] = resume_input
+            st.session_state["last_jd_input"] = jd_input
 
     # Render Results Dashboard
     if st.session_state.get("has_analyzed", False) and "match_results" in st.session_state:
         results = st.session_state["match_results"]
+        matcher = get_cached_matcher()
 
         st.markdown("<hr style='margin: 32px 0;'>", unsafe_allow_html=True)
         st.subheader("📊 Match Evaluation Dashboard")
@@ -84,10 +88,11 @@ def render_single_match_view(config: dict):
         render_overall_score_card(results["overall_fit"])
 
         # 2. Detailed Breakdown Tabs
-        tab_skills, tab_keywords, tab_sentences = st.tabs([
+        tab_skills, tab_keywords, tab_sentences, tab_tailor = st.tabs([
             "🛠️ Skill Analysis & Gaps",
             "🔤 Keyword Attribution",
             "🎯 Sentence Alignment",
+            "💡 Tailoring Advice & Sandbox",
         ])
 
         with tab_skills:
@@ -108,7 +113,7 @@ def render_single_match_view(config: dict):
 
         with tab_keywords:
             st.markdown("#### Key Shared Terms Driving TF-IDF Similarity")
-            st.caption("These words and phrases appeared in both documents with the highest statistical relevance.")
+            st.caption("Words and phrases appearing in both documents with the highest statistical relevance.")
             render_keyword_table(results["lexical_analysis"]["top_keywords"])
 
         with tab_sentences:
@@ -120,3 +125,21 @@ def render_single_match_view(config: dict):
                 with st.expander(f"Alignment #{idx}: {item['alignment_score'] * 100:.1f}% Similarity", expanded=(idx == 1)):
                     st.markdown(f"**Job Requirement:**\n> {item['jd_requirement']}")
                     st.markdown(f"**Matched Resume Experience:**\n* {item['matched_resume_experience']}")
+
+        with tab_tailor:
+            # Resolve current text for the sandbox
+            current_resume = st.session_state.get("last_resume_input", "")
+            if not isinstance(current_resume, str):
+                current_resume = matcher._resolve_text(current_resume, "resume.txt")
+
+            current_jd = st.session_state.get("last_jd_input", "")
+            if not isinstance(current_jd, str):
+                current_jd = matcher._resolve_text(current_jd, "jd.txt")
+
+            render_tailoring_tab(
+                results=results,
+                matcher=matcher,
+                config=config,
+                current_resume_text=current_resume,
+                jd_text=current_jd,
+            )

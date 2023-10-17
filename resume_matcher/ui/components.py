@@ -187,3 +187,65 @@ def render_keyword_table(top_keywords: List[Dict[str, Any]]):
         use_container_width=True,
         hide_index=True,
     )
+
+def render_tailoring_tab(results: Dict[str, Any], matcher, config: dict, current_resume_text: str, jd_text: str):
+    """Render the actionable resume tailoring advice and interactive live re-scorer."""
+    skill_analysis = results["skill_analysis"]
+    overall_fit = results["overall_fit"]
+    recs = skill_analysis["recommendations"]
+
+    st.markdown("#### 💡 Actionable ATS & Tailoring Guidance")
+    st.caption("Strategic changes to align your resume with this position's key requirements.")
+
+    # 1. ATS Compliance Checklist Cards
+    c1, c2, c3 = st.columns(3)
+    with c1:
+        cov_pct = skill_analysis["skill_coverage_percentage"]
+        if cov_pct >= 70:
+            st.success(f"✅ **Skills Coverage**: {cov_pct}% (Good)")
+        else:
+            st.warning(f"⚠️ **Skills Coverage**: {cov_pct}% (Needs Work)")
+
+    with c2:
+        sem_pct = overall_fit["sub_scores"]["semantic"]["percentage"]
+        if sem_pct >= 65:
+            st.success(f"✅ **Role Alignment**: {sem_pct}% (Strong)")
+        else:
+            st.warning(f"⚠️ **Role Alignment**: {sem_pct}% (Moderate)")
+
+    with c3:
+        missing_count = len(skill_analysis["missing_skills"])
+        if missing_count <= 2:
+            st.success(f"✅ **Gaps**: Only {missing_count} missing")
+        else:
+            st.info(f"ℹ️ **Gaps**: {missing_count} keywords to address")
+
+    # 2. Key Tailoring Bullet Points
+    st.markdown("##### 📌 High-Impact Recommendations:")
+    for rec in recs:
+        st.markdown(f"- {rec}")
+
+    st.markdown("<hr style='margin: 20px 0;'>", unsafe_allow_html=True)
+
+    # 3. Interactive In-Browser Live Re-Scorer
+    st.markdown("##### ✍️ Live Resume Tailoring Sandbox")
+    st.caption(
+        "Try integrating some of the missing skills into the text below and click 'Re-evaluate' to see your new fit score instantly."
+    )
+
+    edited_resume = st.text_area(
+        "Edit your resume in-place:",
+        value=current_resume_text,
+        height=220,
+        key="sandbox_resume_editor",
+    )
+
+    if st.button("🔄 Re-evaluate Fit with Edits", type="secondary"):
+        with st.spinner("Re-calculating match score with your updates..."):
+            new_results = matcher.match(
+                resume_input=edited_resume,
+                jd_input=jd_text,
+                weights=config["weights"],
+            )
+            st.session_state["match_results"] = new_results
+            st.rerun()
