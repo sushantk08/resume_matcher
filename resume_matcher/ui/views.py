@@ -87,6 +87,29 @@ def render_single_match_view(config: dict):
         # 1. Top Score Card
         render_overall_score_card(results["overall_fit"])
 
+        # Export Action Bar
+        from resume_matcher.reporting import JSONReporter, HTMLReporter
+        json_report = JSONReporter.generate(results)
+        html_report = HTMLReporter.generate(results)
+
+        col_d1, col_d2, _ = st.columns([1, 1, 2])
+        with col_d1:
+            st.download_button(
+                label="📄 Download HTML Report",
+                data=html_report,
+                file_name="candidate_evaluation_report.html",
+                mime="text/html",
+                use_container_width=True,
+            )
+        with col_d2:
+            st.download_button(
+                label="📥 Download JSON Data",
+                data=json_report,
+                file_name="candidate_evaluation.json",
+                mime="application/json",
+                use_container_width=True,
+            )
+
         # 2. Detailed Breakdown Tabs
         tab_skills, tab_keywords, tab_sentences, tab_tailor = st.tabs([
             "🛠️ Skill Analysis & Gaps",
