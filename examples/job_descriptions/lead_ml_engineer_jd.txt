@@ -1,0 +1,12 @@
+Job Title: Staff / Lead Machine Learning Engineer
+Company: Cognitive Scale AI
+Location: Remote
+
+Role Overview:
+Cognitive Scale is looking for an experienced Machine Learning Engineer to spearhead our generative AI and NLP initiative.
+
+Requirements:
+- 4+ years experience in Python, PyTorch, and Scikit-Learn.
+- Proven track record with Natural Language Processing (NLP), Deep Learning, and LLMs.
+- Experience with Docker containerization and deploying models to AWS.
+- Knowledge of Vector Databases and Data Engineering pipelines.

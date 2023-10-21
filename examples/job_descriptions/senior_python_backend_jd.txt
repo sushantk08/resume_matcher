@@ -1,0 +1,18 @@
+Job Title: Senior Backend Engineer - Python & Cloud Infrastructure
+Company: Apex Cloud Systems
+Location: Remote / Hybrid
+
+About the Role:
+We are seeking a Senior Backend Engineer to design, build, and scale our core cloud microservices. You will take ownership of backend APIs, database architecture, and deployment pipelines.
+
+Key Responsibilities:
+- Design and maintain high-performance REST APIs in Python using FastAPI or Django.
+- Manage and optimize relational databases (PostgreSQL) and caching layers (Redis).
+- Build containerized applications using Docker and deploy them on AWS cloud infrastructure with Kubernetes.
+- Drive automated CI/CD pipeline improvements and maintain test-driven development standards.
+
+Required Qualifications:
+- 4+ years software engineering experience in Python.
+- Demonstrated hands-on expertise with Docker, Kubernetes, and AWS.
+- Strong proficiency with PostgreSQL and Redis.
+- Solid background in Microservices, System Design, and CI/CD automation.

@@ -1,0 +1,16 @@
+Jordan Lee - Frontend UI/UX Developer
+Email: jordan.ui@example.com | New York, NY
+
+SUMMARY
+Creative Frontend Engineer with 4 years specializing in responsive user interfaces, React, TypeScript, Next.js, and modern CSS architecture.
+
+TECHNICAL SKILLS
+- Languages: JavaScript, TypeScript, HTML, CSS
+- Frameworks: React, Next.js, Vue, Tailwind CSS
+- Tooling: Webpack, Vite, Jest, Git, Figma
+
+EXPERIENCE
+Frontend Developer | WebCraft Studio (2021 - Present)
+- Developed enterprise web applications using React, Next.js, and TypeScript.
+- Implemented state management with Redux and React Context.
+- Built reusable component libraries with Tailwind CSS and Storybook.

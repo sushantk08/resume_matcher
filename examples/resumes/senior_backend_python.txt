@@ -1,0 +1,23 @@
+Alex Morgan - Senior Backend Engineer
+Email: alex.morgan@example.com | San Francisco, CA
+
+PROFESSIONAL SUMMARY
+Senior Software Engineer with 6+ years of experience specializing in high-throughput backend services, distributed systems, and cloud infrastructure using Python, FastAPI, and PostgreSQL.
+
+CORE SKILLS
+- Programming: Python, Go, SQL, Bash
+- Frameworks: FastAPI, Django, Flask
+- Cloud & DevOps: Docker, Kubernetes, AWS (EC2, S3, RDS), Terraform, GitHub Actions, CI/CD, Linux
+- Databases & Caching: PostgreSQL, Redis, DynamoDB
+- Methodologies: Microservices, REST APIs, System Design, Unit Testing, Agile
+
+EXPERIENCE
+Staff Backend Engineer | FinTech Cloud (2022 - Present)
+- Architected and scaled financial transaction microservices in Python with FastAPI handling 15,000 requests/sec.
+- Containerized legacy monolithic services with Docker and orchestrated deployment onto AWS EKS using Kubernetes.
+- Optimized PostgreSQL database queries and implemented Redis caching, reducing p99 response latency by 45%.
+- Established automated CI/CD deployment pipelines using GitHub Actions with 95% test coverage.
+
+Software Engineer | SaaS Innovations (2019 - 2022)
+- Built customer-facing REST APIs using Django and PostgreSQL.
+- Automated AWS cloud provisioning using Terraform scripts.
