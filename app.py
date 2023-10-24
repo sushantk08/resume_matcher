@@ -3,7 +3,11 @@ Main Streamlit Application Entry Point.
 """
 
 import streamlit as st
-from resume_matcher.ui import render_sidebar_controls, render_single_match_view
+from resume_matcher.ui import (
+    render_sidebar_controls,
+    render_single_match_view,
+    render_batch_match_view,
+)
 
 # Streamlit Page Config
 st.set_page_config(
@@ -42,4 +46,4 @@ with tab1:
     render_single_match_view(sidebar_config)
 
 with tab2:
-    st.info("Batch Candidate Triage mode will be activated in Step 14.")
+    render_batch_match_view(sidebar_config)
