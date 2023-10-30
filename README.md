@@ -1,345 +1,301 @@
-# 📄 Resume / Job Description Matcher
+# 📄 AI Resume & Job Description Matcher
 
-An end-to-end **resume-to-job matching and fit scoring engine** with an interactive **Streamlit web application** and command-line interface. The project combines lexical matching, semantic similarity, technical skill extraction, ATS-style keyword analysis, and candidate ranking to help evaluate how well a resume matches a job description.
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://resumematcher-bysushantkulkarni.streamlit.app/)
+![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)
+![Streamlit](https://img.shields.io/badge/Streamlit-App-red.svg)
+![License](https://img.shields.io/badge/License-MIT-green.svg)
 
----
+A beginner-friendly **Python and NLP project** that compares a resume with a job description and gives a match score.
 
-## 🌟 Overview
+The project uses **TF-IDF, sentence-transformers, spaCy, and Streamlit** to understand the text, compare skills, identify missing skills, and display the results through an interactive web application.
 
-The **Resume / Job Description Matcher** analyzes a candidate's resume against a job description and produces an overall fit assessment.
-
-Instead of relying on simple keyword matching alone, the project combines multiple techniques:
-
-- **Lexical Overlap** using TF-IDF with sublinear term-frequency scaling and N-grams.
-- **Semantic Understanding** using `sentence-transformers` and dense neural embeddings.
-- **Technical Competency Analysis** using spaCy `PhraseMatcher` and a curated technical skills taxonomy.
-- **ATS Guidance** through missing keyword detection and resume-tailoring recommendations.
-- **Candidate Ranking** for batch evaluation of multiple resumes against a single job description.
-- **Interactive Reports** through Streamlit and exported HTML/JSON results.
-
-The goal is to provide a practical, explainable approach to resume screening rather than depending on a single similarity score.
+🔗 **Live Demo:**  
+https://resumematcher-bysushantkulkarni.streamlit.app/
 
 ---
 
-## 🎯 Project Objectives
+## 📌 About the Project
 
-The application is designed to answer questions such as:
+When applying for jobs, it can be difficult to know whether a resume matches the requirements of a particular job description.
 
-- How closely does a resume match a specific job description?
-- Which required technical skills are already present?
-- Which important keywords are missing?
-- How semantically similar is the candidate's experience to the job requirements?
-- Which candidate is the strongest match when multiple resumes are available?
-- What areas of the resume could be improved for better ATS alignment?
+I built this project to understand how **Python, NLP, machine learning, and web applications** can be used to solve this problem.
 
----
+The application takes:
 
-## 🚀 Key Features
+- A resume
+- A job description
 
-### 🔤 1. Lexical Matching
+and then analyzes them to provide:
 
-The project uses **TF-IDF** from `scikit-learn` to measure important terms shared between the resume and job description.
+- Overall match score
+- Skill matches
+- Missing skills
+- Text similarity
+- Sentence-level comparison
+- Suggestions for improving the resume
 
-It uses:
-
-- TF-IDF vectorization.
-- Sublinear TF scaling.
-- Word N-grams.
-- Cosine similarity.
-
-This helps identify direct terminology overlap between candidate and employer text.
+This project helped me practice working with **real-world text data, NLP libraries, machine learning techniques, file handling, and Streamlit**.
 
 ---
 
-### 🧠 2. Semantic Similarity
+## ✨ Main Features
 
-Keyword overlap alone can miss relationships between differently worded sentences. To address this, the application uses **Sentence Transformers**.
+### 1. Resume and Job Description Matching
 
-The default model is:
+Upload a resume and a job description and get an overall similarity score.
 
-```text
-all-MiniLM-L6-v2
-```
+The application uses three main methods:
 
-Resume and job-description text are transformed into dense vector embeddings and compared using semantic similarity.
+- Semantic similarity
+- Technical skill matching
+- TF-IDF text similarity
 
-For example, a resume mentioning:
+### 2. Multiple File Formats
 
-```text
-Built scalable REST services using Python.
-```
+The application can read:
 
-can still be considered relevant to a job description mentioning:
+- PDF
+- DOCX
+- TXT
+- Markdown files
 
-```text
-Develop backend APIs and scalable web services with Python.
-```
+### 3. Technical Skill Matching
 
-This provides a stronger measure of contextual similarity than exact keyword matching alone.
+The project contains a technical skill list covering areas such as:
+
+- Programming Languages
+- Frameworks
+- Databases
+- Cloud & DevOps
+- AI/ML
+- System Architecture
+
+It checks which skills from the job description are present in the resume.
+
+### 4. Missing Skill Identification
+
+The application identifies skills that appear in the job description but are not found in the resume.
+
+This can help a candidate understand areas they may want to learn or highlight if they already have the relevant experience.
+
+### 5. Sentence-Level Comparison
+
+Resume statements can be compared with job-description requirements to understand which parts of the resume are more closely related to the job.
+
+### 6. Resume Tailoring
+
+The application provides an interactive area where resume text can be modified and analyzed again.
+
+This makes it easier to experiment with different resume wording.
+
+### 7. Batch Resume Matching
+
+Multiple resumes can be compared against the same job description.
+
+The application can display the results together so they can be compared more easily.
+
+### 8. Report Export
+
+The results can be exported as:
+
+- HTML
+- JSON
+
+### 9. Streamlit Web Interface
+
+The complete project is available through a simple web interface built using Streamlit.
 
 ---
 
-### 🛠️ 3. Technical Skill Extraction
+## 🧠 How It Works
 
-The project uses **spaCy PhraseMatcher** together with a curated technical skill taxonomy to identify technology-related competencies.
-
-Examples include:
-
-- Python
-- Java
-- FastAPI
-- Flask
-- Django
-- SQL
-- PostgreSQL
-- MongoDB
-- Docker
-- AWS
-- Git
-- React
-- Pandas
-- NumPy
-- Machine Learning
-
-The extracted skills are compared between the resume and job description to identify matches and gaps.
-
----
-
-### 📊 4. Composite Fit Scoring
-
-The application combines multiple signals instead of relying on one metric.
-
-A conceptual scoring pipeline is:
+The basic flow of the application is:
 
 ```text
 Resume + Job Description
-            │
-            ├── TF-IDF / N-gram Similarity
-            │
-            ├── Semantic Embedding Similarity
-            │
-            ├── Technical Skill Matching
-            │
-            └── Keyword Gap Analysis
-                     │
-                     ▼
-              Combined Fit Score
-                     │
-          ┌──────────┴──────────┐
-          ▼                     ▼
-    Match Analysis        ATS Guidance
+          │
+          ▼
+   Extract Text
+          │
+          ▼
+  Clean & Preprocess
+          │
+          ├───────────────┬────────────────┐
+          ▼               ▼                ▼
+       TF-IDF       Semantic Matching   Skill Matching
+          │               │                │
+          └───────────────┴────────────────┘
+                          │
+                          ▼
+                    Match Score
+                          │
+                          ▼
+              Skills & Missing Skills
+                          │
+                          ▼
+                   Results Dashboard
 ```
-
-The final result provides a more informative view of candidate fit than raw keyword overlap.
 
 ---
 
-### 🔎 5. Missing Keyword Detection
+## 📐 Matching Method
 
-The system identifies important terms found in the job description but not detected in the resume.
+The project combines three different scores.
 
-This can highlight potential gaps such as:
+### 1. Semantic Similarity — 35%
+
+The project uses:
 
 ```text
+sentence-transformers/all-MiniLM-L6-v2
+```
+
+This model converts text into numerical vectors called **embeddings**.
+
+The embeddings are then compared using cosine similarity.
+
+This helps identify text that has a similar meaning even when the exact words are different.
+
+---
+
+### 2. Skill Matching — 35%
+
+The application checks the technical skills found in:
+
+- The resume
+- The job description
+
+For example:
+
+```text
+Job Description:
+Python, FastAPI, PostgreSQL, Docker
+
+Resume:
+Python, FastAPI, MySQL
+
+Matched Skills:
+Python
+FastAPI
+
 Missing Skills:
-- FastAPI
-- Docker
-- AWS
-- PostgreSQL
+PostgreSQL
+Docker
 ```
 
-This information can be used to improve resume alignment before applying for a role.
+The skill score is based on how many required skills are matched.
 
 ---
 
-### ✍️ 6. Resume Tailoring Sandbox
+### 3. TF-IDF Similarity — 30%
 
-The interactive application provides an in-browser workspace for reviewing and tailoring resume content.
+The project also uses **TF-IDF** from scikit-learn.
 
-This allows users to:
+TF-IDF helps identify important words and phrases shared between the resume and job description.
 
-- Review the match result.
-- Identify missing keywords.
-- Edit resume content.
-- Improve technical terminology.
-- Re-check the match after making changes.
+The project considers both:
+
+- Unigrams
+- Bigrams
+
+This provides another way to compare the two documents.
 
 ---
 
-### 📈 7. Batch Candidate Ranking
+## 🧮 Overall Score
 
-Multiple resumes can be evaluated against a single job description.
-
-The batch workflow can:
-
-1. Load resumes from a directory.
-2. Extract relevant information.
-3. Calculate fit scores.
-4. Compare technical skills.
-5. Rank candidates.
-6. Support quick candidate triage.
-
-Example:
+The three scores are combined using weighted scoring:
 
 ```text
-Candidate A    91.4%
-Candidate B    84.7%
-Candidate C    78.2%
-Candidate D    69.5%
+Overall Score =
+    (Semantic Score × 0.35)
+  + (Skill Score × 0.35)
+  + (TF-IDF Score × 0.30)
 ```
 
-This makes the project useful not only for individual resume analysis but also for basic candidate screening workflows.
+The weights can be adjusted in the application according to the selected requirements.
+
+> The score is only an analytical result. It does not guarantee an interview or job selection.
 
 ---
 
-### 🖥️ 8. Streamlit Web Interface
+## 🛠️ Technologies Used
 
-A browser-based interface is provided through Streamlit.
+| Technology | Purpose |
+|---|---|
+| Python | Main programming language |
+| Streamlit | Web application |
+| scikit-learn | TF-IDF and similarity calculations |
+| sentence-transformers | Semantic text similarity |
+| spaCy | NLP and skill extraction |
+| pypdf | PDF text extraction |
+| python-docx | DOCX text extraction |
+| HTML | Report generation |
+| JSON | Structured report output |
+| Git & GitHub | Version control and project hosting |
 
-The interface allows users to interact with the matching engine without needing to work entirely from the command line.
+---
 
-Typical workflow:
+## 📂 Project Structure
 
 ```text
-Upload / Select Resume
-          ↓
-Provide Job Description
-          ↓
-Run Matching Engine
-          ↓
-View Overall Fit
-          ↓
-Review Skill Matches
-          ↓
-Review Missing Keywords
-          ↓
-Tailor Resume
-          ↓
-Run Match Again
-```
-
----
-
-### 📄 9. Exportable Reports
-
-Single candidate evaluations can be exported into multiple formats.
-
-Supported outputs include:
-
-- HTML reports for human-readable review.
-- JSON reports for structured downstream processing.
-
-Example:
-
-```bash
-python main.py \
-  --resume examples/resumes/senior_backend_python.txt \
-  --jd examples/job_descriptions/senior_python_backend_jd.txt \
-  --export-html report.html \
-  --export-json report.json
-```
-
----
-
-## 🛠️ Tech Stack
-
-| Layer | Technologies | Purpose |
-| :--- | :--- | :--- |
-| **Language** | Python | Core application logic |
-| **Web UI** | Streamlit | Interactive browser interface |
-| **Text Processing** | scikit-learn | TF-IDF and lexical similarity |
-| **Semantic NLP** | sentence-transformers | Dense embeddings and semantic similarity |
-| **NLP** | spaCy | Phrase matching and technical skill extraction |
-| **Similarity** | Cosine Similarity | Comparing text and embeddings |
-| **Data Processing** | Python standard library / project utilities | Text loading and processing |
-| **Reporting** | HTML, JSON | Result export |
-| **Testing** | Python test runner / project test suite | Automated validation |
-
----
-
-## 🧱 Matching Pipeline
-
-The application follows a multi-stage matching process.
-
-```text
-                ┌──────────────────────┐
-                │ Resume + Job Posting │
-                └──────────┬───────────┘
-                           │
-             ┌─────────────┼─────────────┐
-             ▼             ▼             ▼
-        Text Cleanup   TF-IDF/N-grams   Embeddings
-             │             │             │
-             │             ▼             ▼
-             │       Lexical Score   Semantic Score
-             │             │             │
-             └──────┬──────┴──────┬──────┘
-                    ▼             ▼
-              Skill Extraction   Keyword Analysis
-                    │             │
-                    └──────┬──────┘
-                           ▼
-                    Composite Result
-                           │
-             ┌─────────────┼─────────────┐
-             ▼             ▼             ▼
-          Fit Score     Skill Gaps    ATS Guidance
-```
-
----
-
-## 📂 Example Project Structure
-
-```text
-resume-job-matcher/
+resume_matcher/
 │
-├── main.py                         # CLI entry point
-├── app.py                          # Streamlit web application
-├── run_tests.py                    # Automated test runner
-├── requirements.txt                # Python dependencies
-├── README.md
+├── resume_matcher/
+│   ├── extractors/
+│   │   └── # PDF, DOCX and text extraction
+│   │
+│   ├── preprocessing/
+│   │   └── # Text cleaning and preprocessing
+│   │
+│   ├── models/
+│   │   └── # TF-IDF and semantic matching
+│   │
+│   ├── analysis/
+│   │   └── # Skill analysis and gap detection
+│   │
+│   ├── engine/
+│   │   └── # Matching and scoring logic
+│   │
+│   ├── reporting/
+│   │   └── # HTML and JSON reports
+│   │
+│   └── ui/
+│       └── # Streamlit interface
 │
 ├── examples/
 │   ├── resumes/
-│   │   ├── senior_backend_python.txt
-│   │   ├── data_engineer.txt
-│   │   └── software_engineer.txt
-│   │
 │   └── job_descriptions/
-│       ├── senior_python_backend_jd.txt
-│       └── data_engineer_jd.txt
 │
-├── ...                             # Matching engine and NLP modules
-└── ...                             # Tests and supporting utilities
+├── tests/
+│   └── # Project tests
+│
+├── app.py
+├── main.py
+├── run_tests.py
+├── requirements.txt
+├── setup.py
+└── LICENSE
 ```
-
-> The exact repository structure may contain additional modules used by the matching engine, scoring logic, UI, and tests.
 
 ---
 
-## 🚀 Quickstart
+## 🚀 Run the Project Locally
 
-### 1. Prerequisites
-
-Make sure Python 3.10+ is installed.
-
-Check your Python version:
+### Step 1: Clone the Repository
 
 ```bash
-python --version
+git clone https://github.com/sushantk08/resume_matcher.git
+cd resume_matcher
 ```
 
-It is recommended to create and use a virtual environment for the project.
-
----
-
-### 2. Create a Virtual Environment
+### Step 2: Create a Virtual Environment
 
 #### Windows
 
-```powershell
+```bash
 python -m venv venv
-.\venv\Scripts\Activate.ps1
+venv\Scripts\activate
 ```
 
 #### macOS / Linux
@@ -349,41 +305,41 @@ python3 -m venv venv
 source venv/bin/activate
 ```
 
----
-
-### 3. Install Dependencies
+### Step 3: Install Required Packages
 
 ```bash
 pip install -r requirements.txt
 ```
 
-The first execution may also download the required NLP/embedding model depending on the project's implementation.
-
----
-
-## 🖥️ Launch the Web Interface
-
-Start the Streamlit application using:
-
-```bash
-python main.py --gui
-```
-
-Or directly through Streamlit:
+### Step 4: Start the Application
 
 ```bash
 streamlit run app.py
 ```
 
-After startup, Streamlit will provide a local browser URL where the application can be opened.
+The application will normally be available at:
+
+```text
+http://localhost:8501
+```
+
+---
+
+## 🌐 Live Application
+
+You can try the deployed application here:
+
+### 🔗 https://resumematcher-bysushantkulkarni.streamlit.app/
+
+The live application allows you to upload your resume and job description and see the matching results directly in your browser.
 
 ---
 
 ## 💻 Command-Line Usage
 
-### Single Resume Match
+The project also includes a simple command-line interface.
 
-Evaluate one resume against one job description:
+### Single Resume
 
 ```bash
 python main.py \
@@ -391,9 +347,7 @@ python main.py \
   --jd examples/job_descriptions/senior_python_backend_jd.txt
 ```
 
----
-
-### Single Match with HTML and JSON Reports
+### Export HTML and JSON Reports
 
 ```bash
 python main.py \
@@ -403,18 +357,7 @@ python main.py \
   --export-json report.json
 ```
 
-This generates:
-
-```text
-report.html
-report.json
-```
-
----
-
-### Batch Candidate Ranking
-
-Evaluate several resumes against the same job description:
+### Multiple Resumes
 
 ```bash
 python main.py \
@@ -422,293 +365,89 @@ python main.py \
   --jd examples/job_descriptions/senior_python_backend_jd.txt
 ```
 
-The engine processes the resumes in the supplied directory and ranks candidates according to the project's matching logic.
-
 ---
 
-## 🧪 Running Automated Tests
+## 🧪 Running Tests
 
-Run the project's test suite with:
+The project includes tests for different parts of the application.
+
+Run:
 
 ```bash
 python run_tests.py
 ```
 
-A successful test run should validate the core matching functionality and supporting application behavior implemented in the repository.
+The tests cover areas such as:
+
+- File extraction
+- Text preprocessing
+- TF-IDF calculations
+- Similarity calculations
+- Skill extraction
+- Reporting
 
 ---
 
-## 🔬 Testing the CLI
+## 📚 What I Learned From This Project
 
-### Test a Single Match
+While building this project, I gained practical experience with:
 
-```bash
-python main.py \
-  --resume examples/resumes/senior_backend_python.txt \
-  --jd examples/job_descriptions/senior_python_backend_jd.txt \
-  --export-html report.html
-```
-
-### Test Batch Candidate Triage
-
-```bash
-python main.py \
-  --batch-resumes examples/resumes/ \
-  --jd examples/job_descriptions/senior_python_backend_jd.txt
-```
-
----
-
-## 📊 Example Output
-
-A typical analysis can contain information such as:
-
-```text
-==================================================
-Resume / Job Description Match Report
-==================================================
-
-Overall Fit Score: 86.7%
-
-Lexical Similarity:   81.4%
-Semantic Similarity:  89.2%
-Technical Skill Fit:  88.5%
-
-Matched Skills:
-- Python
-- FastAPI
-- SQL
-- Docker
-- REST API
-
-Missing / Weak Keywords:
-- AWS
-- Kubernetes
-
-ATS Recommendations:
-- Highlight cloud deployment experience.
-- Add relevant AWS terminology where accurate.
-- Strengthen backend scalability descriptions.
-==================================================
-```
-
-> Output formatting and exact score names depend on the implementation used in the repository.
+- Python project structure
+- Object-oriented programming
+- File handling
+- PDF and DOCX processing
+- Natural Language Processing
+- TF-IDF
+- Cosine similarity
+- Transformer-based embeddings
+- spaCy
+- Streamlit
+- Data preprocessing
+- Working with external Python libraries
+- Writing reusable modules
+- Testing Python applications
+- Generating HTML and JSON reports
+- Deploying a Streamlit application
 
 ---
 
-## 🧮 Matching Methodology
+## 🎯 Project Highlights
 
-The system uses multiple perspectives to evaluate candidate fit.
+This project demonstrates my ability to:
 
-### Lexical Similarity
-
-TF-IDF represents terms based on their importance within the resume and job description. N-grams help preserve useful short phrases instead of evaluating every word completely independently.
-
-### Semantic Similarity
-
-Sentence Transformer embeddings capture contextual relationships between pieces of text. Cosine similarity can then be used to measure how close the resulting embeddings are.
-
-### Skill Matching
-
-A curated technical taxonomy and spaCy PhraseMatcher identify explicit technology and competency mentions.
-
-### Keyword Gap Analysis
-
-Job-description terms that are important but absent from the resume can be surfaced as potential gaps.
-
-### Final Assessment
-
-The individual signals are combined into the project's overall fit assessment. This approach reduces reliance on a single metric and creates a more actionable result.
+- Build a complete Python application from scratch
+- Work with real-world text data
+- Use machine learning/NLP libraries
+- Build an interactive web interface
+- Organize code into multiple modules
+- Implement a practical problem-solving solution
+- Test and deploy a Python application
 
 ---
 
-## 🎯 ATS-Oriented Analysis
+## ⚠️ Disclaimer
 
-The application is designed to provide practical ATS-oriented guidance.
+This application is created as a learning and portfolio project.
 
-It can help identify:
-
-- Missing technical terms.
-- Missing tools and frameworks.
-- Weak terminology overlap.
-- Skills that appear in the job description but not in the resume.
-- Areas where resume wording can be made more closely aligned with a target role.
-
-The system is intended as a decision-support tool rather than a replacement for human recruitment judgment.
-
----
-
-## 🧠 Why Use Multiple Matching Techniques?
-
-A simple keyword matcher has limitations.
-
-For example:
-
-```text
-Resume:
-"Developed scalable backend services using Python."
-
-Job Description:
-"Build high-performance Python APIs for distributed systems."
-```
-
-The wording is different even though the concepts are strongly related.
-
-A robust matcher can combine:
-
-```text
-Exact / Phrase Overlap
-          +
-Semantic Similarity
-          +
-Technical Skill Matching
-          +
-Keyword Gap Analysis
-          ↓
-More Informative Candidate Fit Assessment
-```
-
-This is one of the main technical goals of the project.
-
----
-
-## 🔄 End-to-End Workflow
-
-```text
-1. Load Resume
-       ↓
-2. Load Job Description
-       ↓
-3. Normalize and preprocess text
-       ↓
-4. Calculate lexical similarity
-       ↓
-5. Generate semantic embeddings
-       ↓
-6. Calculate semantic similarity
-       ↓
-7. Extract technical skills
-       ↓
-8. Compare candidate and job skills
-       ↓
-9. Detect missing keywords
-       ↓
-10. Calculate overall fit
-       ↓
-11. Generate ATS guidance
-       ↓
-12. Display or export report
-```
-
----
-
-## 📦 Example Use Cases
-
-### 👨‍💻 Job Seekers
-
-A candidate can compare their resume against different job descriptions and identify skills or terminology that deserve attention.
-
-### 👩‍💼 Recruiters
-
-Recruiters can quickly compare multiple candidate resumes against a target role and prioritize profiles for manual review.
-
-### 🎓 Students & Freshers
-
-Students can use the project to understand how resumes can be matched against technical job descriptions and where their skill gaps may exist.
-
-### 🧪 NLP Learning Project
-
-The project provides a practical example of combining classical NLP techniques with modern embedding-based semantic search.
-
----
-
-## 🧰 Technical Concepts Demonstrated
-
-This project demonstrates practical knowledge of:
-
-- Python application development.
-- Natural Language Processing.
-- TF-IDF vectorization.
-- N-gram text features.
-- Cosine similarity.
-- Sentence embeddings.
-- Transformer-based semantic similarity.
-- spaCy NLP pipelines.
-- PhraseMatcher.
-- Information extraction.
-- Technical skill taxonomies.
-- Streamlit application development.
-- CLI application design.
-- Batch processing.
-- Candidate ranking.
-- JSON report generation.
-- HTML report generation.
-- Automated testing.
-
----
-
-## ⚠️ Limitations
-
-Resume matching is inherently difficult because job descriptions and resumes can use different terminology, contain incomplete information, or describe skills with different levels of detail.
-
-Important limitations include:
-
-- Similarity scores do not guarantee candidate suitability.
-- A missing keyword does not necessarily mean a candidate lacks the skill.
-- Semantic similarity can produce matches that require human verification.
-- Results depend on the quality of the supplied resume and job description.
-- ATS guidance should only recommend truthful resume improvements; candidates should not add skills they do not actually possess.
-
-The application should therefore be treated as an **assistive matching and analysis tool**, not as an automated hiring decision maker.
-
----
-
-## 📈 Possible Future Improvements
-
-Potential future enhancements include:
-
-- PDF and DOCX resume parsing.
-- Multi-language resume matching.
-- Skill synonym and abbreviation expansion.
-- Experience-level detection.
-- Education and certification matching.
-- Job-title similarity scoring.
-- Explainable score breakdowns.
-- Improved ranking calibration using labeled datasets.
-- Historical application tracking.
-- Resume version management.
-- Automated report dashboards.
-- Database-backed candidate storage.
-- REST API around the matching engine.
-- Cloud deployment.
-- CI/CD automation.
-
----
-
-## 🔐 Responsible Usage
-
-This project should be used to support human decision-making rather than make final employment decisions automatically.
-
-For candidates, the tailoring functionality should be used to improve clarity and relevance **without misrepresenting qualifications or adding skills that the candidate does not have**.
-
-For recruiters, automated scores should be treated as one signal among many and reviewed alongside experience, interviews, portfolio work, and other relevant evidence.
+The match score should not be considered a final hiring decision. A resume may be suitable for a position even if the calculated score is low, and a high score does not guarantee an interview or job offer.
 
 ---
 
 ## 📄 License
 
-Add the license used by your repository here.
+ **MIT License**.
 
-For example:
-
-```text
-MIT License
-```
 
 ---
 
-## 👨‍💻 Project Summary
+## 👨‍💻 Author
 
-**Resume / Job Description Matcher** is a practical NLP-focused application that combines **TF-IDF lexical similarity, sentence-transformer semantic embeddings, spaCy-based technical skill extraction, ATS keyword analysis, and candidate ranking** into a single workflow.
+**Sushant Satish Kulkarni**
 
-It demonstrates how classical NLP techniques and modern embedding models can work together to solve a real-world problem: understanding how closely a candidate profile aligns with a job description and turning that analysis into actionable feedback.
+Python Developer | Backend Development | Data & AI Applications
+
+- GitHub: https://github.com/sushantk08
+- LinkedIn: https://www.linkedin.com/in/sushant-kulkarni08/
+
+---
+
